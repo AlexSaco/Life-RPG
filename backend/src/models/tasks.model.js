@@ -8,6 +8,15 @@ const getAllTasks = async () => {
     return result.rows;
 };
 
+const getTaskById = async (id) => {
+    const result = await pool.query(
+        "SELECT id, user_id, title, description, created_at, priority, due_date, recurrence_type, recurrence_days FROM tasks WHERE id = $1",
+        [id]
+    )
+
+    return result.rows[0];
+}
+
 const createTask = async (task) => {
     const result = await pool.query(
         `INSERT INTO tasks (user_id, title, description, priority, due_date, recurrence_type, recurrence_days)
@@ -19,7 +28,20 @@ const createTask = async (task) => {
     return result.rows[0];
 }
 
+const deleteTask = async (id) => {
+    const result = await pool.query(
+        `DELETE FROM tasks
+         WHERE id = $1
+         RETURNING title, description, priority, due_date, recurrence_type, recurrence_days`,
+        [id]
+    );
+
+    return result.rows[0];
+}
+
 module.exports = {
     getAllTasks,
-    createTask
+    createTask,
+    deleteTask,
+    getTaskById
 };
