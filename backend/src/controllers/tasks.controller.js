@@ -14,6 +14,25 @@ const getTasks = async (req, res) => {
     }
 };
 
+const createTask = async (req, res) => {
+    try{
+        const task = req.body;
+        const newTask = await tasksModel.createTask(task);
+
+        res.status(201).json({
+            message: "Tarea creada exitosamente",
+            task: newTask
+        });
+    }catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            message:"Error al crear la tarea"
+        });
+    }
+}
+
 module.exports = {
-    getTasks
+    getTasks,
+    createTask
 };
