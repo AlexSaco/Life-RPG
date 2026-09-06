@@ -70,9 +70,32 @@ const deleteTask = async (req, res) => {
     }
 }
 
+const updateTask = async (req, res) => {
+    try {
+        const {id} = req.params;
+        const task = req.body;
+
+        const updatedTask = await tasksModel.updateTask(id, task);
+
+        if (!updatedTask) {
+            return res.status(404).json({
+                message: "Tarea no encontrada"
+            });
+        }   
+        res.json(updatedTask);
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            message: "Error al actualizar la tarea"
+        });
+    }
+}
+
 module.exports = {
     getTasks,
     getTaskById,
     createTask,
-    deleteTask
+    deleteTask,
+    updateTask
 };

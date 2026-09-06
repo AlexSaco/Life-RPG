@@ -39,9 +39,23 @@ const deleteTask = async (id) => {
     return result.rows[0];
 }
 
+const updateTask = async (id, task) => {
+    const result = await pool.query(
+        `UPDATE tasks
+         SET title = $1, description = $2, priority = $3, due_date = $4, recurrence_type = $5, recurrence_days = $6
+         WHERE id = $7
+         RETURNING id, user_id, title, description, created_at, priority, due_date, recurrence_type, recurrence_days`,
+        [task.title, task.description, task.priority, task.due_date, task.recurrence_type, task.recurrence_days, id]
+    );  
+
+    return result.rows[0];
+}
+
+
 module.exports = {
     getAllTasks,
     createTask,
     deleteTask,
-    getTaskById
+    getTaskById,
+    updateTask
 };
